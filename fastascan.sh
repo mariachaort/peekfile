@@ -4,34 +4,28 @@ filenum=0
 uniqueIDs=0
 seqnum=0
 totallen=0
-if [[ -z $directory ]] 
-then
+if [[ -z $directory ]]; then
 fastafa=$(find . -type f -or -type l -name "*.fasta" -or -name "*.fa")
 else 
 directory=$(find $1 -type d)
-fastafa=$(find $directory -type f -name "*.fasta" -or -name "*.fa") 
-
+fastafa=$(find $directory -type f -or -type l -name "*.fasta" -or -name "*.fa") 
 fi
-	for file in $fastafa 
-		do 
+	for file in $fastafa; do 
 			echo " "
 			ID=$(grep '>' $file | sed 's/>//' | awk '{print $1}' | uniq -c | wc -l)
 			uniqueIDs=$(( $uniqueIDs+$ID ))
-	
 			filenum=$(( $filenum + 1))
 			
-			if grep -v ">" $file | grep -iq '[MNDFLIBQZWVPYESR]'
-			then 
-			echo ==== FILE $file REPORT [amino acid sequence] ====
-			else 
+		if grep -v ">" $file | grep -qi [MDFLIBQZWVPYESR]; then 
+			echo ==== FILE $file REPORT [aminoacidic sequence] ====
+		else 
 			echo ==== FILE $file REPORT [nucleotidic sequence] ====
-			fi 
+		fi 
 			echo " "
 			seqnum=$(grep ">" $file | wc -l)
 			echo "(+) Number of sequences is $seqnum"
 			
-		if [[ -h $file ]] 
-		then 
+		if [[ -h $file ]]; then 
 			echo "(+) Symbolic link"
 		else 
 			echo "(+) Not a symbolic link"
@@ -42,10 +36,8 @@ fi
 		echo "(+) Sequence length is $totallen"
 		echo " "
 		numlines=$(wc -l < $file)
-		if [[ -n $num ]]
-		then
-		   if [[ $numlines -le $((2*$2)) ]]
-          	   then 
+		if [[ -n $num ]]; then
+		   if [[ $numlines -le $((2*$2)) ]]; then 
 			echo = Displaying full content =
 			cat $file 
 		   else 
@@ -57,7 +49,6 @@ fi
 			fi
 		fi
 	done
-
 echo " "
 echo SUMMARY
 echo "(+) Number of fasta/fa files: $filenum"
