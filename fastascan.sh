@@ -27,9 +27,8 @@ fi
 			link="Not symbolic link"
 		fi
 		
-		totallen=$(grep -v ">" $file | sed 's/-//g' | sed 's/ //g' | awk -v totallen=0 '{totallen=totallen + length($0)} END {print totallen}')  # Discarding gaps and spaces, and summing 
-																			 # the length of every line in the file  
-	       
+		totallen=$(grep -v ">" $file | sed 's/-//g' | sed 's/ //g' | awk -v totallen=0 '{gsub("\n", ""); totallen=totallen + length($0)} END {print totallen}')  # Discarding gaps and spaces, 
+		                                                                                                                                    # and summing the length of every line in the file  
 	       if grep -v ">" $file | grep -qi [MDFLIBQZWVPYESR]; then                                 # Testing if the content of the sequences has any of the aminoacids except A,T,G,C and N 
 	       											       # Printing all the information
 			echo ==== FILE $file REPORT [aminoacidic sequence] ====
